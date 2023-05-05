@@ -1,0 +1,33 @@
+demo <- function(t, x, params)
+{
+  x1 <- x[1]
+  x2 <- x[2]
+  beta <- params$beta
+  
+  dx1 <- x2 * (beta - 2*x1)
+  dx2 <- -beta * x1 + x1^2 - x2^2 + 1
+  dx <- c(dx1, dx2)
+  
+  return(list(dx))
+}
+
+end_condition <- function(context)
+{
+  it <- context$iteration
+  if(it >= 2){
+    return(TRUE)
+  }
+  return(FALSE)
+}
+
+perturbation <- function(context)
+{
+  params <- context$params
+  beta <- params$beta
+  beta <- beta + 0.1
+  params[['beta']] <- beta
+  return(params)
+}
+
+apply_cperturbation(demo, c(1,1), end_condition = end_condition, perturbation = perturbation, params=list('beta'=1))
+

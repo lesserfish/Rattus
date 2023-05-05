@@ -1,0 +1,115 @@
+library(phaseR)
+library(animation)
+library(plotrix)     
+setwd("~/Documents/Work/SysBio2023/Presentations/")
+
+func <- function(t, y, parameters) {
+  x <- y[1]
+  y <- y[2]
+  lambda <- parameters[1]
+  
+  dy <- numeric(2)
+  dy[1] <- y * (lambda - 2 * x)
+  dy[2] <- - lambda * x + x*x - y*y + 1
+  
+  return(list(dy))
+}
+# Plot flowField
+{
+  bound = 1
+  ff <- flowField(func, xlim=c(-bound, bound), ylim=c(-bound, bound), parameters = c(0), points=2, add = FALSE, )
+  dev.copy(png, "flowfield.png")
+  dev.off()
+}
+# Plot flowField
+{
+  bound = 9
+  ff <- flowField(func, xlim=c(-bound, bound), ylim=c(-bound, bound), parameters = c(0), points=30, add = FALSE)
+  dev.copy(png, "flowfield.png")
+  dev.off()
+}
+# Plot flowField with point
+{
+  bound = 9
+  ff <- flowField(func, xlim=c(-bound, bound), ylim=c(-bound, bound), parameters = c(0), points=30, add = FALSE)
+  draw.circle(1.0, -2, 0.15, border="red")
+  dev.copy(png, "flowfield-wpoint.png")
+  dev.off()
+}
+
+# Plot Trajectory 
+{
+  bound = 9
+  ff <- flowField(func, xlim=c(-bound, bound), ylim=c(-bound, bound), parameters = c(param), points=30, add = FALSE)
+  grid()
+  x <- c()
+  y <- c()
+  
+  saveGIF({
+    for (t in seq(0.1, 2.5, length.out = 150)) {
+      ff <- flowField(func, xlim=c(-bound, bound), ylim=c(-bound, bound), parameters = c(param), points=30, add = FALSE)
+      nl <- trajectory(func, y0=c(1.0, -2), tlim=c(0, t), parameters = c(param), col = "red")
+      x <- c(x, nl$x[length(nl$x)])
+      y <- c(y, nl$y[length(nl$y)])
+    }
+  }, movie.name = "trajectory.gif", interval = 0.1)
+  
+  plot.new()
+  saveGIF({
+    for (t in 1:length(x)) {
+      barplot(height = c(x[t], y[t]), names.arg = c('X', 'Y'), col = c("#800020", "#1f77b4"), ylim = c(min, max))
+    }
+  }, movie.name = "trajectory-values.gif", interval = 0.1)
+}
+
+< # Plot Bifurcation animation
+{
+  plotframe.bifurcation <- function(t)
+  {
+    param = t
+    bound = 9
+    ff <- flowField(func, xlim=c(-bound, bound), ylim=c(-bound, bound), parameters = c(param), points=30, add = FALSE)
+    grid()
+    nl <- trajectory(func, y0=c(1.0, -2), tlim=c(0, 10), parameters = c(param), col = "red")
+    
+    # Plot Fixed Points
+    
+    #y = 0
+    if(param >= 2.0){
+      fx <- 0.5 * (param + sqrt(param^2 - 4))
+      points(fx, 0, pch=16, col="red", cex=2)
+      fx <- 0.5 * (param - sqrt(param^2 - 4))
+      points(fx, 0, pch=16, col="red", cex=2)
+    }
+    if(-0.5 * param + 1 >= 0){
+      fy <- sqrt(-0.5 * param + 1)
+      fx <- 0.5 * param
+      points(fx, fy, pch=16, col="red", cex=2)
+    }
+  }
+  
+  saveGIF({
+    for (t in seq(0, 5.0, length.out = 150)) {
+      plotframe.bifurcation(t)
+    }
+  }, movie.name = "bifurcation.gif", interval = 0.1)
+} 
+
+{
+  # Define the arrow parameters
+  start <- c(1, 1)
+  dir <- c(-2, 1)
+  radius <- 1
+  end <- start + radius * dir
+  
+  # Plot the Euclidean field
+  plot(x = seq(-2, 2), y = seq(-2, 2), type = "n", xlab = "x", ylab = "y")
+  grid()
+  # Add the arrow to the plot
+  arrows(
+    x0 = start[1], y0 = start[2],
+    x1 = end[1], y1 = end[2],
+    length = 0.1, col = "gray"
+  )
+  points(start[1], start[2])
+}

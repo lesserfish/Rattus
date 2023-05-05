@@ -1,0 +1,29 @@
+library(phaseR)
+library(animation)
+library(plotrix)     
+setwd("~/Documents/Work/SysBio2023/Presentations/")
+
+func <- function(t, y, parameters) {
+  x1 <- y[1]
+  x2 <- y[2]
+  a11 <- parameters[1]
+  a12 <- parameters[2]
+  a21 <- parameters[3]
+  a22 <- parameters[4]
+  
+  B <- 1
+  f <- 1
+  h <- 2
+  
+  dy <- numeric(2)
+  dy[1] <- -B * x1^f + a11 * (x1^h) / (x1^h + 1) + a12 * (x2^h) / (x2^h + 1)
+  dy[2] <- -B * x2^f + a21 * (x1^h) / (x1^h + 1) + a22 * (x2^h) / (x2^h + 1)
+  
+  return(list(dy))
+}
+# Plot flowField
+{
+  bound = 6
+  ff <- flowField(func, xlim=c(-bound, bound), ylim=c(-bound, bound), parameters = c(1, 1, 1, 1), points=30, add = FALSE, )
+  trajectory(func, y0=c(1, 1), tlim = c(0,20), parameters = c(1, 1, 0, 1), col='red')
+}
