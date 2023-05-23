@@ -9,8 +9,9 @@ License: `use_gpl3_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Imports:
-    deSolve
-Suggests: 
-    testthat (>= 3.0.0)
+Imports: deSolve
+Suggests: testthat (>= 3.0.0)
 Config/testthat/edition: 3
+NeedsCompilation: no
+Packaged: 2023-05-11 21:23:51 UTC; lesserfish
+Author: Victor Chavauty [aut, cre]
