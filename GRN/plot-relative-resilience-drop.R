@@ -1,15 +1,17 @@
 # Try with real Network
 library(igraph)
 
+text_color = "white"
+background_color = "black"
 
-par(bg="white")
-plot(NA, NA, xlim=c(0, 1), ylim=c(0, 1), xlab="Proportion of removed genes", ylab="Gene expression")
-axis(1, col="white", col.ticks="white", col.axis="white", cex.axis=1)
-axis(2, col="white", col.ticks="white", col.axis="white", cex.axis=0.8)
+par(bg=background_color, col=text_color)
+
+plot(NA, NA, xlim=c(0, 1), ylim=c(0, 1), xlab="Proportion of removed genes", ylab="Gene expression", col.axis=text_color, col=text_color, col.lab=text_color, col.main=text_color, col.sub=text_color, col.axis=text_color)
+
 
 
 setwd('~/Documents/Code/Rattus/GRN/')
-load("./IL17.RData")
+load("~/Documents/Work/SysBio2023/Presentations/networks/ko04612.RData")
 G <- full_graph
 A <- as.matrix(igraph::as_adjacency_matrix(G, names=FALSE))
 n <- dim(A)[1]
@@ -106,7 +108,7 @@ for(iii in 1:itcount) {
 
 outputmed1 <- apply(output, MARGIN = 2, FUN = median)
 
-load("~/Documents/Work/SysBio2023/Presentations/networks/ko04062.RData")
+load("~/Documents/Work/SysBio2023/Presentations/networks/ko05323.RData")
 G <- full_graph
 A <- as.matrix(igraph::as_adjacency_matrix(G, names=FALSE))
 n <- dim(A)[1]
@@ -205,6 +207,6 @@ lines(seq(0, 1, length.out = length(outputmed1)), y = outputmed1, col = rgb(1, 0
 lines(seq(0, 1, length.out = length(outputmed2)), y = outputmed2, col = rgb(0, 0, 1, alpha = 1.0), lwd=2.5)
 
 
-legend("topright", legend = c("IL-17 Signaling Path", "Chemokine Signaling Path"), col = c("red", "blue"), lty = 1, fill = c("red", "blue"), text.col = "white")
+legend("topright", legend = c("Antigen processing", "Rheumatoid arthritis "), col = c("red", "blue"), lty = 1, fill = c("red", "blue"), text.col = text_color)
 
-title(main = "IL-17 Signaling Path vs Chemokine Signaling Path", col.main="white")
+title(main = "Antigen processing vs Rheumatoid arthritis", col.main=text_color)
